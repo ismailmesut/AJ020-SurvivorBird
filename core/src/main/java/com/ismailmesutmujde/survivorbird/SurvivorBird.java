@@ -20,7 +20,12 @@ public class SurvivorBird extends ApplicationAdapter {
     int gameState = 0;
     float velocity = 0;
     float gravity = 0.2f;
-    float enemyX = 0;
+    float enemyVelocity = 2;
+
+
+    int numberOfEnemies = 4;
+    float [] enemyX = new float[numberOfEnemies];
+    float distance = 0;
 
     @Override
     public void create () {
@@ -31,10 +36,14 @@ public class SurvivorBird extends ApplicationAdapter {
         bee2 = new Texture("bee.png");
         bee3 = new Texture("bee.png");
 
-        enemyX = 900;
+        distance = Gdx.graphics.getWidth() / 2;
 
         birdX = Gdx.graphics.getWidth() / 3 - bird.getHeight() / 2;
         birdY = Gdx.graphics.getHeight() / 3;
+
+        for(int i = 0; i < numberOfEnemies; i++) {
+            enemyX[i] = Gdx.graphics.getWidth() - bee1.getWidth() / 2 + i * distance;
+        }
     }
 
     @Override
@@ -44,15 +53,27 @@ public class SurvivorBird extends ApplicationAdapter {
         batch.draw(background, 0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         if (gameState == 1) {
-            batch.draw(bee1, enemyX, 50,Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
-            batch.draw(bee2, enemyX, 150,Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
-            batch.draw(bee3, enemyX, 350,Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
-
-            enemyX -= 10;
-
             if (Gdx.input.justTouched()) {
                 velocity = -7;
             }
+
+            for (int i = 0; i < numberOfEnemies; i++) {
+
+                if (enemyX[i] < -bee1.getWidth()){
+                    enemyX[i] = enemyX[i] + numberOfEnemies * distance;
+                } else {
+                    enemyX[i] = enemyX[i] - enemyVelocity;
+                }
+
+                batch.draw(bee1, enemyX[i], 50,Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
+                batch.draw(bee2, enemyX[i], 150,Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
+                batch.draw(bee3, enemyX[i], 350,Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
+            }
+
+
+
+
+
 
             if (birdY > 0 || velocity < 0) {
                 velocity = velocity + gravity;

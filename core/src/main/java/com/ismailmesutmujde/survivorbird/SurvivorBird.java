@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
@@ -26,8 +27,11 @@ public class SurvivorBird extends ApplicationAdapter {
     int gameState = 0;
     float velocity = 0;
     float gravity = 0.2f;
-    float enemyVelocity = 2;
+    float enemyVelocity = 6;
     Random random;
+    int score = 0;
+    int scoredEnemy = 0;
+    BitmapFont font;
     Circle birdCircle;
     ShapeRenderer shapeRenderer;
 
@@ -65,7 +69,9 @@ public class SurvivorBird extends ApplicationAdapter {
         enemyCircles2 = new Circle[numberOfEnemies];
         enemyCircles3 = new Circle[numberOfEnemies];
 
-
+        font = new BitmapFont();
+        font.setColor(Color.WHITE);
+        font.getData().setScale(4);
 
         for(int i = 0; i < numberOfEnemies; i++) {
 
@@ -87,6 +93,16 @@ public class SurvivorBird extends ApplicationAdapter {
         batch.draw(background, 0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         if (gameState == 1) {
+
+            if (enemyX[scoredEnemy] < Gdx.graphics.getWidth() / 3 - bird.getHeight() / 2 ) {
+                score++;
+                if(scoredEnemy < numberOfEnemies - 1) {
+                    scoredEnemy++;
+                } else {
+                    scoredEnemy = 0;
+                }
+            }
+
             if (Gdx.input.justTouched()) {
                 velocity = -7;
             }
@@ -140,10 +156,13 @@ public class SurvivorBird extends ApplicationAdapter {
                     enemyCircles3[i] = new Circle();
                 }
                 velocity = 0;
+                scoredEnemy = 0;
+                score = 0;
             }
         }
 
         batch.draw(bird, birdX, birdY , Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
+        font.draw(batch,String.valueOf(score),100,200);
         batch.end();
 
         birdCircle.set(birdX + Gdx.graphics.getWidth() / 30, birdY+ Gdx.graphics.getWidth() / 30,Gdx.graphics.getWidth()/30);

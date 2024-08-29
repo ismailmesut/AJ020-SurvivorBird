@@ -2,8 +2,11 @@ package com.ismailmesutmujde.survivorbird;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 
 import java.util.Random;
 
@@ -23,7 +26,9 @@ public class SurvivorBird extends ApplicationAdapter {
     float velocity = 0;
     float gravity = 0.2f;
     float enemyVelocity = 2;
-
+    Random random;
+    Circle birdCircle;
+    ShapeRenderer shapeRenderer;
 
     int numberOfEnemies = 4;
     float [] enemyX = new float[numberOfEnemies];
@@ -31,7 +36,11 @@ public class SurvivorBird extends ApplicationAdapter {
     float [] enemyOffSet2 = new float[numberOfEnemies];
     float [] enemyOffSet3 = new float[numberOfEnemies];
     float distance = 0;
-    Random random;
+    Circle[] enemyCircles;
+    Circle[] enemyCircles2;
+    Circle[] enemyCircles3;
+
+
 
     @Override
     public void create () {
@@ -48,6 +57,14 @@ public class SurvivorBird extends ApplicationAdapter {
         birdX = Gdx.graphics.getWidth() / 3 - bird.getHeight() / 2;
         birdY = Gdx.graphics.getHeight() / 3;
 
+        shapeRenderer = new ShapeRenderer();
+
+        birdCircle = new Circle();
+        enemyCircles = new Circle[numberOfEnemies];
+        enemyCircles2 = new Circle[numberOfEnemies];
+        enemyCircles3 = new Circle[numberOfEnemies];
+
+
 
         for(int i = 0; i < numberOfEnemies; i++) {
 
@@ -56,6 +73,9 @@ public class SurvivorBird extends ApplicationAdapter {
             enemyOffSet3[i] = (random.nextFloat()-0.5f) * (Gdx.graphics.getHeight()-200);
             enemyX[i] = Gdx.graphics.getWidth() - bee1.getWidth() / 2 + i * distance;
 
+            enemyCircles[i] = new Circle();
+            enemyCircles2[i] = new Circle();
+            enemyCircles3[i] = new Circle();
         }
     }
 
@@ -84,12 +104,11 @@ public class SurvivorBird extends ApplicationAdapter {
                 batch.draw(bee1, enemyX[i], Gdx.graphics.getHeight()/2 + enemyOffSet[i],Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
                 batch.draw(bee2, enemyX[i], Gdx.graphics.getHeight()/2 + enemyOffSet2[i],Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
                 batch.draw(bee3, enemyX[i], Gdx.graphics.getHeight()/2 + enemyOffSet3[i],Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
+
+                enemyCircles[i] = new Circle(enemyX[i] + Gdx.graphics.getWidth()/30, Gdx.graphics.getHeight() / 2 + enemyOffSet[i] + Gdx.graphics.getHeight()/20, Gdx.graphics.getWidth()/30);
+                enemyCircles2[i] = new Circle(enemyX[i] + Gdx.graphics.getWidth()/30, Gdx.graphics.getHeight() / 2 + enemyOffSet2[i] + Gdx.graphics.getHeight()/20, Gdx.graphics.getWidth()/30);
+                enemyCircles3[i] = new Circle(enemyX[i] + Gdx.graphics.getWidth()/30, Gdx.graphics.getHeight() / 2 + enemyOffSet3[i] + Gdx.graphics.getHeight()/20, Gdx.graphics.getWidth()/30);
             }
-
-
-
-
-
 
             if (birdY > 0 || velocity < 0) {
                 velocity = velocity + gravity;
@@ -104,6 +123,18 @@ public class SurvivorBird extends ApplicationAdapter {
 
         batch.draw(bird, birdX, birdY , Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
         batch.end();
+
+        birdCircle.set(birdX + Gdx.graphics.getWidth() / 30, birdY+ Gdx.graphics.getWidth() / 30,Gdx.graphics.getWidth()/30);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.BLACK);
+        shapeRenderer.circle(birdCircle.x, birdCircle.y, birdCircle.radius);
+
+        for (int i=0; i < numberOfEnemies; i++) {
+            shapeRenderer.circle(enemyX[i] + Gdx.graphics.getWidth()/30, Gdx.graphics.getHeight() / 2 + enemyOffSet[i] + Gdx.graphics.getHeight()/20, Gdx.graphics.getWidth()/30);
+            shapeRenderer.circle(enemyX[i] + Gdx.graphics.getWidth()/30, Gdx.graphics.getHeight() / 2 + enemyOffSet2[i] + Gdx.graphics.getHeight()/20, Gdx.graphics.getWidth()/30);
+            shapeRenderer.circle(enemyX[i] + Gdx.graphics.getWidth()/30, Gdx.graphics.getHeight() / 2 + enemyOffSet3[i] + Gdx.graphics.getHeight()/20, Gdx.graphics.getWidth()/30);
+        }
+        shapeRenderer.end();
     }
 
     @Override

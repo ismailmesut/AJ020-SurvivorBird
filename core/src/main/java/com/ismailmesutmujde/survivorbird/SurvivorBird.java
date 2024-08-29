@@ -32,6 +32,9 @@ public class SurvivorBird extends ApplicationAdapter {
     public void render () {
 
         if (gameState == 1) {
+            if (Gdx.input.justTouched()) {
+                velocity = -7;
+            }
 
             if (birdY > 0 || velocity < 0) {
                 velocity = velocity + gravity;

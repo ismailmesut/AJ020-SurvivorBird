@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.util.Random;
+
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class SurvivorBird extends ApplicationAdapter {
@@ -25,7 +27,11 @@ public class SurvivorBird extends ApplicationAdapter {
 
     int numberOfEnemies = 4;
     float [] enemyX = new float[numberOfEnemies];
+    float [] enemyOffSet = new float[numberOfEnemies];
+    float [] enemyOffSet2 = new float[numberOfEnemies];
+    float [] enemyOffSet3 = new float[numberOfEnemies];
     float distance = 0;
+    Random random;
 
     @Override
     public void create () {
@@ -37,12 +43,19 @@ public class SurvivorBird extends ApplicationAdapter {
         bee3 = new Texture("bee.png");
 
         distance = Gdx.graphics.getWidth() / 2;
+        random = new Random();
 
         birdX = Gdx.graphics.getWidth() / 3 - bird.getHeight() / 2;
         birdY = Gdx.graphics.getHeight() / 3;
 
+
         for(int i = 0; i < numberOfEnemies; i++) {
+
+            enemyOffSet[i] = (random.nextFloat()-0.5f) * (Gdx.graphics.getHeight()-200);
+            enemyOffSet2[i] = (random.nextFloat()-0.5f) * (Gdx.graphics.getHeight()-200);
+            enemyOffSet3[i] = (random.nextFloat()-0.5f) * (Gdx.graphics.getHeight()-200);
             enemyX[i] = Gdx.graphics.getWidth() - bee1.getWidth() / 2 + i * distance;
+
         }
     }
 
@@ -61,13 +74,16 @@ public class SurvivorBird extends ApplicationAdapter {
 
                 if (enemyX[i] < -bee1.getWidth()){
                     enemyX[i] = enemyX[i] + numberOfEnemies * distance;
+                    enemyOffSet[i] = (random.nextFloat()-0.5f) * (Gdx.graphics.getHeight()-200);
+                    enemyOffSet2[i] = (random.nextFloat()-0.5f) * (Gdx.graphics.getHeight()-200);
+                    enemyOffSet3[i] = (random.nextFloat()-0.5f) * (Gdx.graphics.getHeight()-200);
                 } else {
                     enemyX[i] = enemyX[i] - enemyVelocity;
                 }
 
-                batch.draw(bee1, enemyX[i], 50,Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
-                batch.draw(bee2, enemyX[i], 150,Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
-                batch.draw(bee3, enemyX[i], 350,Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
+                batch.draw(bee1, enemyX[i], Gdx.graphics.getHeight()/2 + enemyOffSet[i],Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
+                batch.draw(bee2, enemyX[i], Gdx.graphics.getHeight()/2 + enemyOffSet2[i],Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
+                batch.draw(bee3, enemyX[i], Gdx.graphics.getHeight()/2 + enemyOffSet3[i],Gdx.graphics.getWidth()/15,Gdx.graphics.getHeight()/10);
             }
 
 
